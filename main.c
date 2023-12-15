@@ -3,36 +3,29 @@
 #include "menu.h"
 #include "matrixSpiralGenerator.h"
 
-typedef struct
-{
-    int **matrix;
-    int dimension;
-} MatrixInfo;
-
 void clearInputBuffer();
 
-MatrixInfo matrixGeneration(int input)
+int** matrixGeneration(int *dimension, int input)
 {
-    MatrixInfo matrixInfo;
-    int dimension = 0;
+    int **matrix = NULL;
     char startDirection;
-    int rotationDirection; // 0 - clockwise, 1 - counter clockwise
+    int rotationDirection = -1; // 0 - clockwise, 1 - counter clockwise
     if (input == -1)
     {
         clearInputBuffer();
         do
         {
             printf("Enter the dimension of the matrix (1-20): \n");
-            if (scanf(" %d", &dimension) != 1)
+            if (scanf(" %d", dimension) != 1)
             {
                 printf("Invalid input! Please enter an integer.\n");
                 clearInputBuffer();
             }
-            else if (dimension < 1 || dimension > 20)
+            else if (*dimension < 1 || *dimension > 20)
             {
                 printf("Invalid input! The value of the dimension must be between 1 and 20!\n");
             }
-        } while (dimension < 1 || dimension > 20);
+        } while (*dimension < 1 || *dimension > 20);
 
         do
         {
@@ -63,20 +56,19 @@ MatrixInfo matrixGeneration(int input)
         } while (!(rotationDirection == 0 || rotationDirection == 1));
     }
 
-    matrixInfo.matrix = NULL;
-    matrixInfo.dimension = dimension;
 
-    matrixInfo.matrix = (int **)malloc(matrixInfo.dimension * sizeof(int *));
-    if (matrixInfo.matrix == NULL)
+
+    matrix = (int **)malloc(*dimension * sizeof(int *));
+    if (matrix == NULL)
     {
         fprintf(stderr, "Memory allocation failed for rows.\n");
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < matrixInfo.dimension; i++)
+    for (int i = 0; i < *dimension; i++)
     {
-        matrixInfo.matrix[i] = (int *)malloc(matrixInfo.dimension * sizeof(int));
-        if (matrixInfo.matrix[i] == NULL)
+        matrix[i] = (int *)malloc(*dimension * sizeof(int));
+        if (matrix[i] == NULL)
         {
             fprintf(stderr, "Memory allocation failed for columns.\n");
             exit(EXIT_FAILURE);
@@ -85,29 +77,29 @@ MatrixInfo matrixGeneration(int input)
 
     if (input == -1)
     {
-        generateSpiral(matrixInfo.matrix, matrixInfo.dimension, startDirection, rotationDirection);
+        generateSpiral(matrix, *dimension, startDirection, rotationDirection);
     }
-    return matrixInfo;
+    return matrix;
 }
 
-void printMatrix(MatrixInfo matrixInfo)
+void printMatrix(int **matrix, int dimension)
 {
     char c;
-    for (int i = 0; i < matrixInfo.dimension; i++)
+    for (int i = 0; i < dimension; i++)
     {
-        for (int j = 0; j < matrixInfo.dimension; j++)
+        for (int j = 0; j < dimension; j++)
         {
-            if (matrixInfo.dimension < 4)
+            if (dimension < 4)
             {
-                printf("%d ", matrixInfo.matrix[i][j]);
+                printf("%d ", matrix[i][j]);
             }
-            else if (matrixInfo.dimension < 10)
+            else if (dimension < 10)
             {
-                printf("%2d ", matrixInfo.matrix[i][j]);
+                printf("%2d ", matrix[i][j]);
             }
             else
             {
-                printf("%3d ", matrixInfo.matrix[i][j]);
+                printf("%3d ", matrix[i][j]);
             }
         }
         printf("\n");
@@ -117,14 +109,16 @@ void printMatrix(MatrixInfo matrixInfo)
     clearInputBuffer();
 }
 
-void freeMatrix(MatrixInfo *matrixInfo)
+void freeMatrix(int ***matrix, int dimension)
 {
-    for (int i = 0; i < matrixInfo->dimension; i++)
+    for (int i = 0; i < dimension; i++)
     {
-        free(matrixInfo->matrix[i]);
+        free((*matrix)[i]);
     }
-    free(matrixInfo->matrix);
+    free(*matrix);
+    *matrix = NULL;
 }
+
 void userGuide()
 {
     char c;
@@ -138,7 +132,7 @@ void userGuide()
     clearInputBuffer();
 }
 
-void chosenMenuAction(char chosenMenuOption, MatrixInfo *matrixInfo)
+void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension)
 {
     switch (chosenMenuOption)
     {
@@ -146,8 +140,8 @@ void chosenMenuAction(char chosenMenuOption, MatrixInfo *matrixInfo)
         userGuide();
         break;
     case '2':
-        freeMatrix(matrixInfo);
-        *matrixInfo = matrixGeneration(-1);
+        freeMatrix(matrix, *dimension);
+        *matrix = matrixGeneration(dimension, -1);
         break;
     case '3':
         printf("Save\n");
@@ -156,10 +150,10 @@ void chosenMenuAction(char chosenMenuOption, MatrixInfo *matrixInfo)
         printf("Load\n");
         break;
     case '5':
-        printMatrix(*matrixInfo);
+        printMatrix(*matrix, *dimension);
         break;
     case '6':
-        freeMatrix(matrixInfo);
+        freeMatrix(matrix, *dimension);
         exit(0);
         break;
     }
@@ -167,12 +161,12 @@ void chosenMenuAction(char chosenMenuOption, MatrixInfo *matrixInfo)
 
 int main()
 {
-    int initialDimension = 0;
-    MatrixInfo myMatrixInfo = matrixGeneration(initialDimension);
+    int matrixDimension = 0;
+    int **newMatrix = matrixGeneration(&matrixDimension, matrixDimension);
 
     while (1)
     {
-        chosenMenuAction(menu(), &myMatrixInfo);
+        chosenMenuAction(menu(), &newMatrix, &matrixDimension);
     }
 
     return 0;

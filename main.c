@@ -1,65 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
+#include "matrixGenerator.h"
 
 typedef struct {
     int** matrix;
     int dimension;
 } MatrixInfo;
-
-void generateSpiralMatrix(int dimension, char startDirection, int rotationDirection, int** matrix) {
-    int i, top = 0, bottom = dimension - 1, left = 0, right = dimension - 1;
-    int direction;
-
-    switch (startDirection) {
-        case 'l':
-            direction = 2; // left
-            break;
-        case 'u':
-            direction = 3; // up
-            break;
-        case 'r':
-            direction = 0; // right
-            break;
-        case 'd':
-            direction = 1; // down
-            break;
-        default:
-            fprintf(stderr, "Invalid starting direction.\n");
-            exit(EXIT_FAILURE);
-    }
-
-    for (i = 1; i <= dimension * dimension; ++i) {
-        matrix[top][left] = i;
-
-        switch (direction) {
-            case 0: // right
-                left++;
-                break;
-            case 1: // down
-                top++;
-                break;
-            case 2: // left
-                right--;
-                break;
-            case 3: // up
-                bottom--;
-                break;
-        }
-
-        // Change direction based on rotationDirection
-        if (rotationDirection == 1) {
-            direction = (direction + 1) % 4;
-        } else {
-            direction = (direction + 3) % 4;
-        }
-
-        // Adjust indices to stay within bounds
-        if (left > right || top > bottom) {
-            break;
-        }
-    }
-}
 
 MatrixInfo matrixGeneration(int input) {
     MatrixInfo matrixInfo;
@@ -105,8 +52,8 @@ MatrixInfo matrixGeneration(int input) {
         }
     }
     
-    if(input == -1) {
-    generateSpiralMatrix(matrixInfo.dimension, startDirection, rotationDirection, matrixInfo.matrix);
+    if(input == -1) {    
+      generateSpiral(matrixInfo.matrix, matrixInfo.dimension, startDirection, rotationDirection);
     }
     return matrixInfo;
 }

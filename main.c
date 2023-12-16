@@ -2,14 +2,22 @@
 #include <stdlib.h>
 #include "menu.h"
 #include "matrixSpiralGenerator.h"
+#include "matrixFileHandler.h"
 
 void clearInputBuffer();
 
-int** matrixGeneration(int *dimension, int input)
+void backToTheMenu()
+{
+    char c;
+    printf("Type any character to go back to the menu: \n");
+    scanf(" %c", &c);
+    clearInputBuffer();
+}
+
+int** matrixGeneration(int *dimension, int input, char *startDirection, int *rotationDirection)
 {
     int **matrix = NULL;
-    char startDirection;
-    int rotationDirection = -1; // 0 - clockwise, 1 - counter clockwise
+
     if (input == -1)
     {
         clearInputBuffer();
@@ -30,30 +38,30 @@ int** matrixGeneration(int *dimension, int input)
         do
         {
             printf("Enter the starting direction of the matrix (l - left, u - up, r - right, d - down): \n");
-            if (scanf(" %c", &startDirection) != 1)
+            if (scanf(" %c", startDirection) != 1)
             {
                 printf("Invalid input! Please enter a character.\n");
                 clearInputBuffer();
             }
-            else if (!(startDirection == 'l' || startDirection == 'u' || startDirection == 'r' || startDirection == 'd'))
+            else if (!(*startDirection == 'l' || *startDirection == 'u' || *startDirection == 'r' || *startDirection == 'd'))
             {
                 printf("Invalid input! Please enter l, u, r, or d.\n");
             }
-        } while (!(startDirection == 'l' || startDirection == 'u' || startDirection == 'r' || startDirection == 'd'));
+        } while (!(*startDirection == 'l' || *startDirection == 'u' || *startDirection == 'r' || *startDirection == 'd'));
 
         
         do {
             printf("Enter the rotation direction of the matrix (0 - clockwise, 1 - counter clockwise): \n");
-            if (scanf(" %d", &rotationDirection) != 1)
+            if (scanf(" %d", rotationDirection) != 1)
             {
                 printf("Invalid input! Please enter an integer.\n");
                 clearInputBuffer();
             }
-            else if (!(rotationDirection == 0 || rotationDirection == 1))
+            else if (!(*rotationDirection == 0 || *rotationDirection == 1))
             {
                 printf("Invalid input! Please enter 0 or 1.\n");
             }
-        } while (!(rotationDirection == 0 || rotationDirection == 1));
+        } while (!(*rotationDirection == 0 || *rotationDirection == 1));
     }
 
 
@@ -77,7 +85,7 @@ int** matrixGeneration(int *dimension, int input)
 
     if (input == -1)
     {
-        generateSpiral(matrix, *dimension, startDirection, rotationDirection);
+        generateSpiral(matrix, *dimension, *startDirection, *rotationDirection);
     }
     return matrix;
 }
@@ -104,9 +112,6 @@ void printMatrix(int **matrix, int dimension)
         }
         printf("\n");
     }
-    printf("Type any character to go back to the menu: \n");
-    scanf(" %c", &c);
-    clearInputBuffer();
 }
 
 void freeMatrix(int ***matrix, int dimension)
@@ -127,30 +132,30 @@ void userGuide()
     printf("#2 Matrix Generation: Here you can...\n");
     printf("#3 You can save your generated matrixes here\n");
     printf("#4 In this you can load an existing..\n");
-    printf("Type any character to go back to the menu: \n");
-    scanf(" %c", &c);
-    clearInputBuffer();
 }
 
-void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension)
+void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension, char *startDirection, int *rotationDirection)
 {
     switch (chosenMenuOption)
     {
     case '1':
         userGuide();
+        backToTheMenu();
         break;
     case '2':
         freeMatrix(matrix, *dimension);
-        *matrix = matrixGeneration(dimension, -1);
+        *matrix = matrixGeneration(dimension, -1, startDirection, rotationDirection);
         break;
     case '3':
-        printf("Save\n");
+        saveMatrixToFile(*matrix, *dimension, *startDirection, *rotationDirection);
         break;
     case '4':
-        printf("Load\n");
+        readMatrixFromFile(matrix, dimension, startDirection, rotationDirection);
+        backToTheMenu();
         break;
     case '5':
         printMatrix(*matrix, *dimension);
+        backToTheMenu();
         break;
     case '6':
         freeMatrix(matrix, *dimension);
@@ -162,11 +167,13 @@ void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension)
 int main()
 {
     int matrixDimension = 0;
-    int **newMatrix = matrixGeneration(&matrixDimension, matrixDimension);
+    char startDirection;
+    int rotationDirection = -1; // 0 - clockwise, 1 - counter clockwise
+    int **newMatrix = matrixGeneration(&matrixDimension, matrixDimension, &startDirection, &rotationDirection);
 
     while (1)
     {
-        chosenMenuAction(menu(), &newMatrix, &matrixDimension);
+        chosenMenuAction(menu(), &newMatrix, &matrixDimension, &startDirection, &rotationDirection);
     }
 
     return 0;

@@ -32,6 +32,7 @@ void generateSpiral(int **A, int N, char start_pos, int rotate_dir) {
     char direction = start_pos;
     int sor = N / 2;
     int oszlop = N / 2;
+    
     if(N % 2 == 0) {
         if((direction == 'r' && rotate_dir == 0) || (direction == 'd' && rotate_dir == 1)) {
             oszlop--;

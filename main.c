@@ -11,7 +11,7 @@ void backToTheMenu()
 {
     char c;
     printf("Type any character to go back to the menu: \n");
-    fgets(&c, sizeof(c), stdin);
+    scanf(" %c", &c);
     clearInputBuffer();
 }
 
@@ -25,34 +25,48 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
         do
         {
             printf("Enter the dimension of the matrix (1-20): \n");
-            char inputDimension[50];
-            fgets(inputDimension, sizeof(inputDimension), stdin);
-            if (sscanf(inputDimension, "%d", dimension) != 1)
+            if (scanf(" %d", dimension) != 1)
             {
-                printf("Invalid input! Please enter an integer value.\n");
-                continue;
+                printf("Invalid input! Please enter an integer.\n");
+                clearInputBuffer();
             }
-            if (*dimension < 1 || *dimension > 20)
+            else if (*dimension < 1 || *dimension > 20)
             {
                 printf("Invalid input! The value of the dimension must be between 1 and 20!\n");
             }
+            
         } while (*dimension < 1 || *dimension > 20);
 
-        char inputDirection[2];
+        clearInputBuffer();
+
+        char inputDirection[10];
         do
         {
             printf("Enter the starting direction of the matrix (l - left, u - up, r - right, d - down): \n");
             fgets(inputDirection, sizeof(inputDirection), stdin);
-            *startDirection = inputDirection[0];
+            if (inputDirection[1] != '\n')
+            {
+                printf("Invalid input! Please enter a single character.\n");
+            }
+            else if (!(inputDirection[0] == 'l' || inputDirection[0] == 'u' || inputDirection[0] == 'r' || inputDirection[0] == 'd'))
+            {
+                printf("Invalid input! Please enter l, u, r, or d.\n");
+            }
+            else
+            {
+                *startDirection = inputDirection[0];
+            }
         } while (!(*startDirection == 'l' || *startDirection == 'u' || *startDirection == 'r' || *startDirection == 'd'));
 
         
         do {
             printf("Enter the rotation direction of the matrix (0 - clockwise, 1 - counter clockwise): \n");
-            char inputRotation[2];
-            fgets(inputRotation, sizeof(inputRotation), stdin);
-            *rotationDirection = atoi(inputRotation);
-            if (!(*rotationDirection == 0 || *rotationDirection == 1))
+            if (scanf(" %d", rotationDirection) != 1)
+            {
+                printf("Invalid input! Please enter an integer.\n");
+                clearInputBuffer();
+            }
+            else if (!(*rotationDirection == 0 || *rotationDirection == 1))
             {
                 printf("Invalid input! Please enter 0 or 1.\n");
             }
@@ -87,10 +101,6 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
 
 void printMatrix(int **matrix, int dimension)
 {
-    if(dimension == 0) {
-        printf("There is no matrix to print.\n");
-        return;
-    }
     char c;
     for (int i = 0; i < dimension; i++)
     {

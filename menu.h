@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-char menu();
+int menu();
 void printMenu();
 
 #endif

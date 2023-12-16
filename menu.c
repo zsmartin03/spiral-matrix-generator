@@ -17,19 +17,25 @@ void printMenu() {
 }
 
 
-char menu() {
+int menu() {
 
-  char menuOption = '0';
+  int menuOption = 0;
   printMenu();
-  printf("\n > Choose an option (1-6): ");
-  scanf(" %c", &menuOption);
+  
+  do {
+    printf("\n > Choose an option (1-6): ");
+    if(scanf(" %d", &menuOption) != 1) {
+      printMenu();
+      printf("\n   Invalid option, enter an integer!\n");
+      int c;
+      while ((c = getchar()) != '\n' && c != EOF);
 
-  while(!(menuOption == '1' || menuOption == '2' || menuOption == '3' || menuOption == '4' || menuOption == '5' || menuOption == '6')) {
-    printMenu();
-    printf("  Invalid option!\n");
-    printf("> Choose an option (1-6): ");
-    scanf(" %c", &menuOption);
-  }
+    }
+    else if(!(menuOption == 1 || menuOption == 2 || menuOption == 3 || menuOption == 4 || menuOption == 5 || menuOption == 6)) {
+      printMenu();
+      printf("\n   Invalid option, enter a number between 1 and 6!\n");
+    }
+  } while(!(menuOption == 1 || menuOption == 2 || menuOption == 3 || menuOption == 4 || menuOption == 5 || menuOption == 6));
 
   return menuOption;
 }

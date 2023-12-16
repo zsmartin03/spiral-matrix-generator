@@ -1,47 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char getNextDirection(char direction, int rotate_dir) {
-    if (rotate_dir == 0) {
+char getNextDirection(char direction, int rotationDirection) {
+    if (rotationDirection == 0) {
         switch (direction) {
-        case 'r':
-            return 'd';
-        case 'd':
-            return 'l';
-        case 'l':
-            return 'u';
-        case 'u':
-            return 'r';
+            case 'r':
+                return 'd';
+            case 'd':
+                return 'l';
+            case 'l':
+                return 'u';
+            case 'u':
+                return 'r';
         }
     } else {
         switch (direction) {
-        case 'l':
-            return 'd';
-        case 'd':
-            return 'r';
-        case 'r':
-            return 'u';
-        case 'u':
-            return 'l';
+            case 'l':
+                return 'd';
+            case 'd':
+                return 'r';
+            case 'r':
+                return 'u';
+            case 'u':
+                return 'l';
         }
     }
 }
 
-void generateSpiral(int **matrix, int size, char start_pos, int rotate_dir) {
+void generateSpiral(int **matrix, int size, char startDirection, int rotationDirection) {
 
-    char direction = start_pos;
+    char direction = startDirection;
     int row = size / 2;
     int column = size / 2;
 
     if(size % 2 == 0) {
-        if((direction == 'r' && rotate_dir == 0) || (direction == 'd' && rotate_dir == 1)) {
+        if((direction == 'r' && rotationDirection == 0) || (direction == 'd' && rotationDirection == 1)) {
             column--;
             row--;
         }
-        else if((direction == 'r' && rotate_dir == 1) || (direction == 'u' && rotate_dir == 0)) {
+        else if((direction == 'r' && rotationDirection == 1) || (direction == 'u' && rotationDirection == 0)) {
             column--;
         }
-        else if((direction == 'd' && rotate_dir == 0) || (direction == 'l' && rotate_dir == 1)) {
+        else if((direction == 'd' && rotationDirection == 0) || (direction == 'l' && rotationDirection == 1)) {
             row--;
         }
     }
@@ -78,7 +78,7 @@ void generateSpiral(int **matrix, int size, char start_pos, int rotate_dir) {
             }
             value++;
         }
-        direction = getNextDirection(direction, rotate_dir);
+        direction = getNextDirection(direction, rotationDirection);
         moveCounter++;
 
         if(value > (size * size)) {

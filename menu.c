@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 void printMenu() {
-  printf("\e[1;1H\e[2J"); // console clear regex
+  printf("\e[1;1H\e[2J"); // console clear
   printf(" ___________________________________________ \n");
   printf("|                                           |\n");
   printf("|           Spiral Matrix Generator         |\n");
@@ -29,7 +29,6 @@ int menu() {
       printf("\n   Invalid option, enter an integer!\n");
       int c;
       while ((c = getchar()) != '\n' && c != EOF);
-
     }
     else if(!(menuOption == 1 || menuOption == 2 || menuOption == 3 || menuOption == 4 || menuOption == 5 || menuOption == 6)) {
       printMenu();

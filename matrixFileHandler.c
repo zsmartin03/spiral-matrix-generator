@@ -2,6 +2,12 @@
 #include <stdlib.h>
 
 void saveMatrixToFile(int **matrix, int size, char startDirection, int rotationDirection) {
+
+    if(size == 0) {
+        printf("There is no matrix to save.\n");
+        return;
+    }
+   
     char filename[20];
     sprintf(filename, "spiral_%d_%c_%d.txt", size, startDirection, rotationDirection);
 
@@ -31,6 +37,7 @@ void saveMatrixToFile(int **matrix, int size, char startDirection, int rotationD
     }
 
     fclose(file);
+    printf("Matrix saved successfully.\n");
 }
 
 void readMatrixFromFile(int ***matrix, int *size, char *startDirection, int *rotationDirection) {

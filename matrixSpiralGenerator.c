@@ -51,7 +51,7 @@ void generateSpiral(int **matrix, int size, char start_pos, int rotate_dir) {
     int moveAmount = 1;
     int moveCounter = 0;
 
-    while(value < (size * size)) {
+    while(value <= (size * size)) {
         if (moveAmount < (size - 1)) {
             if (moveCounter == 2) {
                 moveAmount++;
@@ -79,6 +79,10 @@ void generateSpiral(int **matrix, int size, char start_pos, int rotate_dir) {
             value++;
         }
         direction = getNextDirection(direction, rotate_dir);
-        moveCounter++;    
+        moveCounter++;
+
+        if(value > (size * size)) {
+            break;  // mukodik enelkul is, csak biztos ami biztos
+        }
     }
 }

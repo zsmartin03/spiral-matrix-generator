@@ -187,6 +187,7 @@ void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension, char
         break;
     case '3':
         saveMatrixToFile(*matrix, *dimension, *startDirection, *rotationDirection);
+        backToTheMenu();
         break;
     case '4':
         readMatrixFromFile(matrix, dimension, startDirection, rotationDirection);

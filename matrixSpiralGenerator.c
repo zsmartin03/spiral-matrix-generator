@@ -27,29 +27,32 @@ char getNextDirection(char direction, int rotate_dir) {
     }
 }
 
-void generateSpiral(int **A, int N, char start_pos, int rotate_dir) {
+void generateSpiral(int **matrix, int size, char start_pos, int rotate_dir) {
 
     char direction = start_pos;
-    int sor = N / 2;
-    int oszlop = N / 2;
-    
-    if(N % 2 == 0) {
+    int row = size / 2;
+    int column = size / 2;
+
+    if(size % 2 == 0) {
         if((direction == 'r' && rotate_dir == 0) || (direction == 'd' && rotate_dir == 1)) {
-            oszlop--;
-            sor--;
+            column--;
+            row--;
         }
         else if((direction == 'r' && rotate_dir == 1) || (direction == 'u' && rotate_dir == 0)) {
-            oszlop--;
+            column--;
         }
         else if((direction == 'd' && rotate_dir == 0) || (direction == 'l' && rotate_dir == 1)) {
-            sor--;
+            row--;
         }
     }
-    A[sor][oszlop] = 1;
+    int value = 1;
+    matrix[row][column] = value;
+    value++;
     int moveAmount = 1;
     int moveCounter = 0;
-    for (int value = 2; value <= (N * N);) {
-        if (moveAmount < (N - 1)) {
+
+    while(value < (size * size)) {
+        if (moveAmount < (size - 1)) {
             if (moveCounter == 2) {
                 moveAmount++;
                 moveCounter = 0;
@@ -58,24 +61,24 @@ void generateSpiral(int **A, int N, char start_pos, int rotate_dir) {
 
         for (int i = 0; i < moveAmount; i++) {
             if (direction == 'r') {
-                oszlop++;
-                A[sor][oszlop] = value; 
+                column++;
+                matrix[row][column] = value; 
             }
             if (direction == 'd') {
-                sor++;
-                A[sor][oszlop] = value;
+                row++;
+                matrix[row][column] = value;
             }
             if (direction == 'l') {
-                oszlop--;
-                A[sor][oszlop] = value;
+                column--;
+                matrix[row][column] = value;
             }
             if (direction == 'u') {
-                sor--;
-                A[sor][oszlop] = value;
+                row--;
+                matrix[row][column] = value;
             }
             value++;
         }
         direction = getNextDirection(direction, rotate_dir);
-        moveCounter++;     
+        moveCounter++;    
     }
 }

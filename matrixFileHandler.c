@@ -35,7 +35,7 @@ void saveMatrixToFile(int **matrix, int size, char startDirection, int rotationD
 
 void readMatrixFromFile(int ***matrix, int *size, char *startDirection, int *rotationDirection) {
     char filename[20];
-    printf("Enter the filename: ");
+    printf("Enter the filename (with the .txt): ");
     scanf("%s", filename);
 
     FILE* file = fopen(filename, "r");
@@ -63,6 +63,6 @@ void readMatrixFromFile(int ***matrix, int *size, char *startDirection, int *rot
             fscanf(file, "%d", &((*matrix)[i][j]));
         }
     }
-
     fclose(file);
+    printf("Matrix loaded successfully.\n");
 }

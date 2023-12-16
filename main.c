@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "menu.h"
 #include "matrixSpiralGenerator.h"
 #include "matrixFileHandler.h"
@@ -10,7 +11,7 @@ void backToTheMenu()
 {
     char c;
     printf("Type any character to go back to the menu: \n");
-    scanf(" %c", &c);
+    fgets(&c, sizeof(c), stdin);
     clearInputBuffer();
 }
 
@@ -24,40 +25,34 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
         do
         {
             printf("Enter the dimension of the matrix (1-20): \n");
-            if (scanf(" %d", dimension) != 1)
+            char inputDimension[50];
+            fgets(inputDimension, sizeof(inputDimension), stdin);
+            if (sscanf(inputDimension, "%d", dimension) != 1)
             {
-                printf("Invalid input! Please enter an integer.\n");
-                clearInputBuffer();
+                printf("Invalid input! Please enter an integer value.\n");
+                continue;
             }
-            else if (*dimension < 1 || *dimension > 20)
+            if (*dimension < 1 || *dimension > 20)
             {
                 printf("Invalid input! The value of the dimension must be between 1 and 20!\n");
             }
         } while (*dimension < 1 || *dimension > 20);
 
+        char inputDirection[2];
         do
         {
             printf("Enter the starting direction of the matrix (l - left, u - up, r - right, d - down): \n");
-            if (scanf(" %c", startDirection) != 1)
-            {
-                printf("Invalid input! Please enter a character.\n");
-                clearInputBuffer();
-            }
-            else if (!(*startDirection == 'l' || *startDirection == 'u' || *startDirection == 'r' || *startDirection == 'd'))
-            {
-                printf("Invalid input! Please enter l, u, r, or d.\n");
-            }
+            fgets(inputDirection, sizeof(inputDirection), stdin);
+            *startDirection = inputDirection[0];
         } while (!(*startDirection == 'l' || *startDirection == 'u' || *startDirection == 'r' || *startDirection == 'd'));
 
         
         do {
             printf("Enter the rotation direction of the matrix (0 - clockwise, 1 - counter clockwise): \n");
-            if (scanf(" %d", rotationDirection) != 1)
-            {
-                printf("Invalid input! Please enter an integer.\n");
-                clearInputBuffer();
-            }
-            else if (!(*rotationDirection == 0 || *rotationDirection == 1))
+            char inputRotation[2];
+            fgets(inputRotation, sizeof(inputRotation), stdin);
+            *rotationDirection = atoi(inputRotation);
+            if (!(*rotationDirection == 0 || *rotationDirection == 1))
             {
                 printf("Invalid input! Please enter 0 or 1.\n");
             }
@@ -69,8 +64,8 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
     matrix = (int **)malloc(*dimension * sizeof(int *));
     if (matrix == NULL)
     {
-        fprintf(stderr, "Memory allocation failed for rows.\n");
-        exit(EXIT_FAILURE);
+        printf("Memory allocation failed for rows.\n");
+        exit(1);
     }
 
     for (int i = 0; i < *dimension; i++)
@@ -78,8 +73,8 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
         matrix[i] = (int *)malloc(*dimension * sizeof(int));
         if (matrix[i] == NULL)
         {
-            fprintf(stderr, "Memory allocation failed for columns.\n");
-            exit(EXIT_FAILURE);
+            printf("Memory allocation failed for columns.\n");
+            exit(1);
         }
     }
 
@@ -92,6 +87,10 @@ int** matrixGeneration(int *dimension, int input, char *startDirection, int *rot
 
 void printMatrix(int **matrix, int dimension)
 {
+    if(dimension == 0) {
+        printf("There is no matrix to print.\n");
+        return;
+    }
     char c;
     for (int i = 0; i < dimension; i++)
     {
@@ -128,10 +127,40 @@ void userGuide()
 {
     char c;
     printf("\e[1;1H\e[2J");
-    printf("This is a program where you can generate spiral matrixes.\n");
-    printf("#2 Matrix Generation: Here you can...\n");
-    printf("#3 You can save your generated matrixes here\n");
-    printf("#4 In this you can load an existing..\n");
+    printf(" ___________________________________________ \n");
+    printf("|                                           |\n");
+    printf("|          Spiral Matrix Generator          |\n");
+    printf("|                Users Guide                |\n");
+    printf("|                                           |\n");
+    printf("| This is a program where you can generate  |\n");
+    printf("| spiral matrices.                          |\n");
+    printf("|                                           |\n");
+    printf("| In the menu you can choose between six    |\n");
+    printf("| options.                                  |\n");
+    printf("| You are currently in the first option the |\n");
+    printf("| user guide.                               |\n");
+    printf("| By choosing the second option, you can    |\n");
+    printf("| generate your matrix by choosing its      |\n");
+    printf("| dimension (1-20), its starting rotation   |\n");
+    printf("| and the direction it rotates.             |\n");
+    printf("| Under the third and fourth options you    |\n");
+    printf("| have the ability to save your matrix to a |\n");
+    printf("| file (it will have its dimension and      |\n");
+    printf("| rotation parameters in its name), or to   |\n");
+    printf("| load a matrix from a file to the current  |\n");
+    printf("| session.                                  |\n");
+    printf("| If you want to print your matrix to the   |\n");
+    printf("| terminal, you can do it by choosing the   |\n");
+    printf("| fifth option.                             |\n");
+    printf("| You can exit the program by choosing the  |\n");
+    printf("| sixth option.                             |\n");
+    printf("|                                           |\n");
+    printf("| Whenever the program asks you to type any |\n");
+    printf("| character to go back to the menu, you     |\n");
+    printf("| need to type in any text and then press   |\n");
+    printf("| the enter.                                |\n");
+    printf("|                                           |\n");
+    printf("|___________________________________________|\n");
 }
 
 void chosenMenuAction(char chosenMenuOption, int ***matrix, int *dimension, char *startDirection, int *rotationDirection)
